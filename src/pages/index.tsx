@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Button, Card, Container, Dropdown, Input, Text } from '@nextui-org/react'
+import { Button, Card, Container, Dropdown, Input, Loading, Text } from '@nextui-org/react'
 import { useState } from 'react';
 import { SpeakerSlash } from 'phosphor-react';
 
@@ -7,22 +7,27 @@ export default function Home() {
   const [url, setUrl] = useState("");
   const [embed, setEmebed] = useState("");
   const [listFormats, setListFormats] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  function goToURL(url: any): void{
+  function goToURL(url: any): void {
     window.open(url, '_blank') as any;
   }
 
   function handleDownload() {
-    console.log(url);
+    setLoading(true);
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/?url=${url}`)
       .then(response => response.json())
       .then(response => {
         setEmebed(response.url)
         setListFormats(response.info);
+        setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setLoading(false);
       })
+
+
   }
   return (
     <>
@@ -47,39 +52,52 @@ export default function Home() {
             onChange={e => setUrl(e.target.value)}
             value={url}
           />
-          <Button
-            color="primary"
-            shadow
-            auto
-            css={{ marginTop: 10 }}
-            onPress={handleDownload}
-          >
-            Buscar
-          </Button>
+
+          {loading === true ? (
+
+
+            <Button disabled auto bordered color="success" css={{ px: "$13" }}>
+              <Loading type="points" color="currentColor" size="sm" />
+            </Button>
+          ) : (
+            <Button
+              color="primary"
+              shadow
+              auto
+              css={{ marginTop: 10 }}
+              onPress={handleDownload}
+            >
+              Buscar
+            </Button>
+          )}
+
         </Card>
 
-        <Card isHoverable variant='bordered' css={{ mw: 640, padding: 20, marginTop: 30 }}>
-          <iframe width="560" height="315" src={embed} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        {listFormats.length > 0 && (
 
-          {/* <Button css={{marginTop: 20}} size={"md"} color="success">Download</Button> */}
+          <Card isHoverable variant='bordered' css={{ mw: 640, padding: 20, marginTop: 30 }}>
+            <iframe width="560" height="315" src={embed} title="YouTube video player" style={{border:"none"}} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
 
-          <Dropdown placement='bottom-left'>
-            <Dropdown.Button css={{ marginTop: 30 }}>Download</Dropdown.Button>
-            <Dropdown.Menu items={listFormats} onAction={(url) => goToURL(url)}>
+            {/* <Button css={{marginTop: 20}} size={"md"} color="success">Download</Button> */}
 
-              {(item: any) => (
-                <Dropdown.Item
-                  key={item.url}
-                >
-                  {item.mimeType.split(";")[0]} - {item.hasVideo ? item.height + "p" : ""}
-                  {!item.hasAudio && (
-                    <SpeakerSlash size={20} style={{ marginLeft: 20 }} color="#F31260" />
-                  )}
-                </Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Card>
+            <Dropdown placement='bottom-left'>
+              <Dropdown.Button css={{ marginTop: 30 }}>Download</Dropdown.Button>
+              <Dropdown.Menu items={listFormats} onAction={(url) => goToURL(url)}>
+
+                {(item: any) => (
+                  <Dropdown.Item
+                    key={item.url}
+                  >
+                    {item.mimeType.split(";")[0]} - {item.hasVideo ? item.height + "p" : ""}
+                    {!item.hasAudio && (
+                      <SpeakerSlash size={20} style={{ marginLeft: 20 }} color="#F31260" />
+                    )}
+                  </Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Card>
+        )}
 
 
       </Container>
