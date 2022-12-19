@@ -41,7 +41,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7971838840368407"
-     crossorigin="anonymous"></script>
+     crossOrigin="anonymous"></script>
       </Head>
       <Container alignItems='center' direction='column' display='flex' justify='center' md css={{ marginTop: 50, padding: 50, paddingBottom: 120 }}>
         <Button.Group color="gradient" ghost css={{ marginBottom: 10 }}>
