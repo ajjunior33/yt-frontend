@@ -8,8 +8,8 @@ export default function Home() {
   const [embed, setEmebed] = useState("");
   const [listFormats, setListFormats] = useState([]);
 
-  function goToURL(url: string): void{
-    window.open(url, '_blank').focus();
+  function goToURL(url: any): void{
+    window.open(url, '_blank') as any;
   }
 
   function handleDownload() {
