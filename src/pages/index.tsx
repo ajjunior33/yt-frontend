@@ -1,11 +1,18 @@
-import Head from 'next/head'
-import { Button, Card, Container, Dropdown, Input, Loading, Text } from '@nextui-org/react'
+import axios from 'axios';
 import { useState } from 'react';
-import { SpeakerSlash } from 'phosphor-react';
-import axios from 'axios'; 
 import { useRouter } from 'next/router';
+import Head from 'next/head'
+import { useTheme as useNextTheme } from 'next-themes';
+import {  Button, Card, Container, Dropdown, Input, Loading, Text } from '@nextui-org/react'
+
+import { SpeakerSlash } from 'phosphor-react';
+import { UserComponent } from '../components/UserComponent';
+import { ButtonUpdateThemeComponent } from '../components/ButtonUpdateThemeComponent';
+
 
 export default function Home() {
+  const router = useRouter();
+
   const [url, setUrl] = useState("");
   const [embed, setEmebed] = useState("");
   const [listFormats, setListFormats] = useState([]);
@@ -32,7 +39,6 @@ export default function Home() {
 
   }
 
-  const router = useRouter();
   return (
     <>
       <Head>
@@ -41,9 +47,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7971838840368407"
-     crossOrigin="anonymous"></script>
+          crossOrigin="anonymous"></script>
       </Head>
       <Container alignItems='center' direction='column' display='flex' justify='center' md css={{ marginTop: 50, padding: 50, paddingBottom: 120 }}>
+
+      <ButtonUpdateThemeComponent />
+
         <Button.Group color="gradient" ghost css={{ marginBottom: 10 }}>
           <Button onPress={() => router.push("/")}>Youtube</Button>
           <Button onPress={() => router.push("/instagram")}>Instagram</Button>
@@ -108,7 +117,7 @@ export default function Home() {
           </Card>
         )}
 
-
+        <UserComponent/>
       </Container>
     </>
   )
